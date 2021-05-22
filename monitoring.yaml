@@ -23,3 +23,8 @@ services:
       - '/:/host:ro,rslave'
     command: --collector.disable-defaults --collector.cpufreq --collector.cpu --collector.diskstats --collector.filesystem --collector.meminfo 
     restart: always
+
+networks:
+  default:
+    name: monitoring
+

@@ -1,0 +1,31 @@
+# SOURCE: https://github.com/matrix-org/synapse/blob/890c0c041d2d7f84525ad2031caabc74af9feba7/contrib/docker/docker-compose.yml
+# Generate homeserver.yaml: docker-compose run --rm -e SYNAPSE_SERVER_NAME=matrix.hsp.sh -e SYNAPSE_REPORT_STATS=no synapse generate
+
+version: '3.7'
+
+services:
+  synapse:
+    image: matrixdotorg/synapse:v1.33.2
+    restart: unless-stopped
+    environment:
+      - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
+    volumes:
+      - ./data:/data
+    depends_on:
+      - db
+    ports:
+      - 80:8008
+
+  db:
+    image: docker.io/postgres:12-alpine
+    environment:
+      - POSTGRES_USER=synapse
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - ./schemas:/var/lib/postgresql/data
+
+networks:
+  default:
+    name: matrix
+
